@@ -13,6 +13,8 @@ pids
 
 # Dependency directories
 node_modules/
+.cache
+dist
 
 # Yarn
 yarn-error.log
