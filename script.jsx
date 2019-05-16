@@ -20,7 +20,7 @@ const toDo = (state, action) => {
 const toDos = (state = [], action) => {
 	switch (action.type) {
 		case 'ADD_TODO':
-			return [...state, todo(state, action)];
+			return [...state, toDo(undefined, action)];
 		case 'TOGGLE_TODO':
 			return state.map(todo => toDo(todo, action));
 
@@ -39,6 +39,7 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
 };
 
 const { createStore, combineReducers } = Redux;
+const { Component } = React;
 
 const appTodo = combineReducers({
 	toDos,
@@ -46,42 +47,39 @@ const appTodo = combineReducers({
 });
 const store = createStore(appTodo);
 
-console.log(store.getState());
+let nextToId = 0;
 
-//TESTS
+class TodoApp extends Component {
+	render() {
+		return (
+			<div>
+				<h1>Todos list:</h1>
+				<input type='text' ref={node => (this.input = node)} />
+				<button
+					onClick={() => {
+						store.dispatch({
+							type: 'ADD_TODO',
+							id: nextToId++,
+							text: this.input.value
+						});
+						this.input.value = '';
+					}}
+				>
+					Add task
+				</button>
+				<ul>
+					{this.props.list.map(todo => (
+						<li key={todo.id}>{todo.text}</li>
+					))}
+				</ul>
+			</div>
+		);
+	}
+}
 
-const testToggleTodo = () => {
-	const stateBefore = [
-		{
-			id: 0,
-			text: 'Learn Redux',
-			completed: false
-		},
-		{
-			id: 1,
-			text: 'Go shopping',
-			completed: false
-		}
-	];
-	const action = {
-		type: 'TOGGLE_TODO',
-		id: 1
-	};
-	const stateAfter = [
-		{
-			id: 0,
-			text: 'Learn Redux',
-			completed: false
-		},
-		{
-			id: 1,
-			text: 'Go shopping',
-			completed: true
-		}
-	];
-
-	expect(toDos(stateBefore, action)).toEqual(stateAfter);
+const render = () => {
+	ReactDOM.render(<TodoApp list={store.getState().toDos} />, document.querySelector('#root'));
 };
 
-testToggleTodo();
-console.log('All tests passed.');
+store.subscribe(render);
+render();
