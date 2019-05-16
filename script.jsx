@@ -29,6 +29,25 @@ const toDos = (state = [], action) => {
 	}
 };
 
+const visibilityFilter = (state = 'SHOW_ALL', action) => {
+	switch (action.type) {
+		case 'SET_VISIBILITY_FILTER':
+			return action.filter;
+		default:
+			return state;
+	}
+};
+
+const { createStore, combineReducers } = Redux;
+
+const appTodo = combineReducers({
+	toDos,
+	visibilityFilter
+});
+const store = createStore(appTodo);
+
+console.log(store.getState());
+
 //TESTS
 
 const testToggleTodo = () => {
