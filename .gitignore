@@ -11,8 +11,10 @@ pids
 *.seed
 *.pid.lock
 
-# Dependency directories
+# directories
 node_modules/
+dist/
+.cache
 
 # Yarn
 yarn-error.log
