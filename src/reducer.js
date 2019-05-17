@@ -1,8 +1,4 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { createStore, combineReducers } from 'redux';
-
-import TodoApp from './app';
+import { combineReducers } from 'redux';
 
 const toDo = (state, action) => {
 	switch (action.type) {
@@ -44,19 +40,9 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
 	}
 };
 
-const appTodo = combineReducers({
+const todoReducer = combineReducers({
 	toDos,
 	visibilityFilter
 });
 
-const store = createStore(appTodo);
-
-const render = () => {
-	ReactDOM.render(
-		<TodoApp store={store} list={store.getState().toDos} />,
-		document.querySelector('#root')
-	);
-};
-
-store.subscribe(render);
-render();
+export default todoReducer;
