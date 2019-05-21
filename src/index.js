@@ -39,12 +39,6 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
   switch (action.type) {
     case 'SET_VISIBILITY_FILTER':
       return action.filter;
-    case 'SHOW_ALL':
-      return 'SHOW_ALL';
-    case 'SHOW_ACTIVE':
-      return 'SHOW_ACTIVE';
-    case 'SHOW_DONE':
-      return 'SHOW_DONE';
     default:
       return state;
   }
@@ -59,7 +53,7 @@ const store = createStore(appTodo);
 
 const render = () => {
   ReactDOM.render(
-    <TodoApp store={store} state={store.getState()} />,
+    <TodoApp store={store} {...store.getState()} />,
     document.querySelector('#root')
   );
 };

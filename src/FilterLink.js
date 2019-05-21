@@ -1,8 +1,15 @@
 import React from 'react';
 
-const FilterLink = ({ children, filter, onClick }) => {
+const FilterLink = ({ children, filter, store, currentFilter }) => {
+  if (currentFilter === filter) {
+    return <span>{children}</span>;
+  }
+
   return (
-    <a href="#" onClick={onClick}>
+    <a
+      href="#"
+      onClick={() => store.dispatch({ type: 'SET_VISIBILITY_FILTER', filter })}
+    >
       {children}
     </a>
   );

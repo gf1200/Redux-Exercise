@@ -3,28 +3,27 @@ import FilterLink from './FilterLink';
 
 let nextToId = 0;
 
-const TodoApp = ({ store, state }) => {
+const TodoApp = ({ store, toDos, visibilityFilter }) => {
   const [inputState, setInputState] = useState('');
 
   const onInputChange = e => {
     setInputState(e.target.value);
   };
 
-  let filter = state.visibilityFilter;
-  console.log(filter, 0);
-
-  const filterList = filter => {
+  const getVisibleToDos = (toDos, filter) => {
     switch (filter) {
       case 'SHOW_ALL':
-        return state.toDos;
+        return toDos;
       case 'SHOW_ACTIVE':
-        return state.toDos.filter(task => task.completed !== true);
+        return toDos.filter(task => !task.completed);
       case 'SHOW_DONE':
-        return state.toDos.filter(task => task.completed === true);
+        return toDos.filter(task => task.completed);
       default:
-        return state.toDos;
+        return toDos;
     }
   };
+
+  const visibleToDos = getVisibleToDos(toDos, visibilityFilter);
 
   return (
     <div>
@@ -47,7 +46,7 @@ const TodoApp = ({ store, state }) => {
         Add task
       </button>
       <ul>
-        {filterList(filter).map(todo => (
+        {visibleToDos.map(todo => (
           <li
             key={todo.id}
             onClick={() => store.dispatch({ type: 'TOGGLE_TODO', id: todo.id })}
@@ -58,15 +57,27 @@ const TodoApp = ({ store, state }) => {
         ))}
       </ul>
       <p>
-        <FilterLink onClick={() => store.dispatch({ type: 'SHOW_ALL' })}>
+        <FilterLink
+          store={store}
+          filter="SHOW_ALL"
+          currentFilter={visibilityFilter}
+        >
           show all
         </FilterLink>
         {'  |  '}
-        <FilterLink onClick={() => store.dispatch({ type: 'SHOW_ACTIVE' })}>
+        <FilterLink
+          store={store}
+          filter="SHOW_ACTIVE"
+          currentFilter={visibilityFilter}
+        >
           active
         </FilterLink>{' '}
         {'  |  '}
-        <FilterLink onClick={() => store.dispatch({ type: 'SHOW_DONE' })}>
+        <FilterLink
+          store={store}
+          filter="SHOW_DONE"
+          currentFilter={visibilityFilter}
+        >
           done
         </FilterLink>
       </p>
