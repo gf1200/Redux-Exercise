@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FilterLink from './FilterLink';
+import TodoList from './todoList';
 
 let nextToId = 0;
 
@@ -45,17 +46,10 @@ const TodoApp = ({ store, toDos, visibilityFilter }) => {
       >
         Add task
       </button>
-      <ul>
-        {visibleToDos.map(todo => (
-          <li
-            key={todo.id}
-            onClick={() => store.dispatch({ type: 'TOGGLE_TODO', id: todo.id })}
-            style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
-          >
-            {todo.text}
-          </li>
-        ))}
-      </ul>
+      <TodoList
+        visibleToDos={visibleToDos}
+        onTodoClick={id => store.dispatch({ type: 'TOGGLE_TODO', id })}
+      />
       <p>
         <FilterLink
           store={store}
