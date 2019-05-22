@@ -1,41 +1,49 @@
 import React, { useState } from 'react';
+import TodoList from './todoList';
+import AddTodo from '../AddTodo';
+import Footer from './Footer';
 
 let nextToId = 0;
 
-const TodoApp = ({ store, list }) => {
+const TodoApp = ({ store, toDos, visibilityFilter }) => {
 	const [inputState, setInputState] = useState('');
 
 	const onInputChange = e => {
 		setInputState(e.target.value);
 	};
 
+	const getVisibleToDos = (toDos, filter) => {
+		switch (filter) {
+			case 'SHOW_ALL':
+				return toDos;
+			case 'SHOW_ACTIVE':
+				return toDos.filter(task => !task.completed);
+			case 'SHOW_DONE':
+				return toDos.filter(task => task.completed);
+			default:
+				return toDos;
+		}
+	};
+
+	const visibleToDos = getVisibleToDos(toDos, visibilityFilter);
+
 	return (
 		<div>
-			<h1>Todos list:</h1>
-			<input type='text' value={inputState} onChange={onInputChange.bind(null)} />
-			<button
-				onClick={() => {
+			<h1>Too do's list:</h1>
+			<AddTodo
+				onAddClick={input =>
 					store.dispatch({
 						type: 'ADD_TODO',
 						id: nextToId++,
-						text: inputState
-					});
-					setInputState('');
-				}}
-			>
-				Add task
-			</button>
-			<ul>
-				{list.map(todo => (
-					<li
-						key={todo.id}
-						onClick={() => store.dispatch({ type: 'TOGGLE_TODO', id: todo.id })}
-						style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
-					>
-						{todo.text}
-					</li>
-				))}
-			</ul>
+						text: input
+					})
+				}
+			/>
+			<TodoList
+				visibleToDos={visibleToDos}
+				onTodoClick={id => store.dispatch({ type: 'TOGGLE_TODO', id })}
+			/>
+			<Footer store={store} currentFilter={visibilityFilter} />
 		</div>
 	);
 };
