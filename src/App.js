@@ -1,17 +1,11 @@
-import React, { useState } from 'react';
-import TodoList from './todoList';
+import React from 'react';
+import TodoList from './TodoList';
 import AddTodo from '../AddTodo';
 import Footer from './Footer';
 
 let nextToId = 0;
 
-const TodoApp = ({ store, toDos, visibilityFilter }) => {
-	const [inputState, setInputState] = useState('');
-
-	const onInputChange = e => {
-		setInputState(e.target.value);
-	};
-
+const App = ({ store, toDos, visibilityFilter }) => {
 	const getVisibleToDos = (toDos, filter) => {
 		switch (filter) {
 			case 'SHOW_ALL':
@@ -43,9 +37,12 @@ const TodoApp = ({ store, toDos, visibilityFilter }) => {
 				visibleToDos={visibleToDos}
 				onTodoClick={id => store.dispatch({ type: 'TOGGLE_TODO', id })}
 			/>
-			<Footer store={store} currentFilter={visibilityFilter} />
+			<Footer
+				onFilterClick={filter => store.dispatch({ type: 'SET_VISIBILITY_FILTER', filter })}
+				currentFilter={visibilityFilter}
+			/>
 		</div>
 	);
 };
 
-export default TodoApp;
+export default App;
