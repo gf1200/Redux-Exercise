@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FilterLink = ({ children, filter, store, currentFilter }) => {
+const FilterLink = ({ children, filter, currentFilter, onClickFilterLink }) => {
   if (currentFilter === filter) {
     return <span>{children}</span>;
   }

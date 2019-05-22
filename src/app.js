@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import FilterLink from './FilterLink';
 import TodoList from './todoList';
+import AddTodo from '../AddTodo';
+import Footer from './Footer';
 
 let nextToId = 0;
 
@@ -29,52 +30,20 @@ const TodoApp = ({ store, toDos, visibilityFilter }) => {
   return (
     <div>
       <h1>Too do's list:</h1>
-      <input
-        type="text"
-        value={inputState}
-        onChange={onInputChange.bind(null)}
-      />
-      <button
-        onClick={() => {
+      <AddTodo
+        onAddClick={input =>
           store.dispatch({
             type: 'ADD_TODO',
             id: nextToId++,
-            text: inputState
-          });
-          setInputState('');
-        }}
-      >
-        Add task
-      </button>
+            text: input
+          })
+        }
+      />
       <TodoList
         visibleToDos={visibleToDos}
         onTodoClick={id => store.dispatch({ type: 'TOGGLE_TODO', id })}
       />
-      <p>
-        <FilterLink
-          store={store}
-          filter="SHOW_ALL"
-          currentFilter={visibilityFilter}
-        >
-          show all
-        </FilterLink>
-        {'  |  '}
-        <FilterLink
-          store={store}
-          filter="SHOW_ACTIVE"
-          currentFilter={visibilityFilter}
-        >
-          active
-        </FilterLink>{' '}
-        {'  |  '}
-        <FilterLink
-          store={store}
-          filter="SHOW_DONE"
-          currentFilter={visibilityFilter}
-        >
-          done
-        </FilterLink>
-      </p>
+      <Footer store={store} currentFilter={visibilityFilter} />
     </div>
   );
 };
